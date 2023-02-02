@@ -2,7 +2,12 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { baseUrl } from './commonApi/todoApi';
+import Input from './components/input2';
+import Todo from './components/todo2';
+import { InputContext } from './contexts/InputContext';
+import { TodoContext } from './contexts/TodoContext';
 
+// 상태전달 : Context Api + useContext()
 function App() {
   const wrap = {
     width: '500px',
@@ -93,42 +98,14 @@ function App() {
 
   return (
     <div className='App' style={wrap}>
-      <h1>TODO LIST</h1>
-      <form onSubmit={insertTodo}>
-        <input
-          type='text'
-          required={true}
-          value={input}
-          onChange={handleChangeText}
-        />
-        {/* 입력 */}
-        <input type='submit' value='Create' />
-      </form>
-      {/* 리스트 */}
-      {todos
-        ? todos.map((todo) => {
-            return (
-              <div className='todo' key={todo.id}>
-                <h3>
-                  <label
-                    className={todo.completed ? 'completed' : null}
-                    onClick={() => updateTodo(todo.id, todo.completed)}
-                  >
-                    {todo.todoname}
-                  </label>
+      <h1>TODO LIST 2(context)</h1>
+      <InputContext.Provider value={{ input, insertTodo, handleChangeText }}>
+        <Input />
+      </InputContext.Provider>
 
-                  <label
-                    onClick={() => {
-                      deleteTodo(todo.id);
-                    }}
-                  >
-                    &nbsp;&nbsp;&nbsp;삭제
-                  </label>
-                </h3>
-              </div>
-            );
-          })
-        : null}
+      <TodoContext.Provider value={{ todos, updateTodo, deleteTodo }}>
+        <Todo />
+      </TodoContext.Provider>
     </div>
   );
 }
